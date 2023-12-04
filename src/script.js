@@ -35,10 +35,14 @@ scene.add(house)
 // Walls
 const walls = new THREE.Mesh(
     new THREE.BoxGeometry(4, 2.5, 4),
-    new THREE.MeshStandardMaterial({ map: textureLoader.load('/textures/bricks/color.jpg') })
-)
+    new THREE.MeshStandardMaterial({ map: textureLoader.load('/textures/bricks/color.jpg') }),
+    )
 
 walls.position.y = 2.5 / 2
+
+walls.castShadow = true
+walls.receiveShadow = true
+
 house.add(walls)
 
 // Roof
@@ -57,16 +61,23 @@ roof.position.y = 2.5 + 0.5
 
 roof.rotation.y = Math.PI * 0.25
 
+roof.castShadow = true
+roof.receiveShadow = true
+
 house.add(roof)
 
 // Door
 const door = new THREE.Mesh(
     new THREE.PlaneGeometry(1, 1.5),
     new THREE.MeshStandardMaterial({ map: textureLoader.load('/textures/door/color.jpg') })
+
 )
 
 door.position.y = 0.75 + 0.01
 door.position.z = 2 + 0.01
+
+door.castShadow = true
+door.receiveShadow = true
 
 house.add(door)
 
@@ -161,6 +172,46 @@ const bush20 = new THREE.Mesh(bushGeometry, bushMaterial)
 bush20.scale.set(0.45, 1.15, 0.55)
 bush20.position.set(2.6, 0.05, - 0.8)
 
+bush1.castShadow = true
+bush1.receiveShadow = true
+bush2.castShadow = true
+bush2.receiveShadow = true
+bush3.castShadow = true
+bush3.receiveShadow = true
+bush4.castShadow = true
+bush4.receiveShadow = true
+bush5.castShadow = true
+bush5.receiveShadow = true
+bush6.castShadow = true
+bush6.receiveShadow = true
+bush7.castShadow = true
+bush7.receiveShadow = true
+bush8.castShadow = true
+bush8.receiveShadow = true
+bush9.castShadow = true
+bush9.receiveShadow = true
+bush10.castShadow = true
+bush10.receiveShadow = true
+bush11.castShadow = true
+bush11.receiveShadow = true
+bush12.castShadow = true
+bush12.receiveShadow = true
+bush13.castShadow = true
+bush13.receiveShadow = true
+bush14.castShadow = true
+bush14.receiveShadow = true
+bush15.castShadow = true
+bush15.receiveShadow = true
+bush16.castShadow = true
+bush16.receiveShadow = true
+bush17.castShadow = true
+bush17.receiveShadow = true
+bush18.castShadow = true
+bush18.receiveShadow = true
+bush19.castShadow = true
+bush19.receiveShadow = true
+bush20.castShadow = true
+bush20.receiveShadow = true
 
 house.add(bush1, bush2, bush3, bush4, bush5, bush6, bush7, bush8, bush9, bush10, bush11, bush12, bush13, bush14, bush15, bush16, bush17, bush18, bush19, bush20)
 
@@ -172,12 +223,16 @@ loader.load('/models/107.glb', function (glb) {
     car.scale.set(0.7, 0.7, 0.7)
     car.position.set(6, 0.2, - 1.5)
     car.rotation.z = Math.PI * - 0.5
+    car.castShadow = true   
+    car.receiveShadow = true
     // Add lights to the car
     const carLight1 = new THREE.PointLight('#ff6d35', 10, 7)
     carLight1.position.set(1.6, -1.4, 1)
+    carLight1.castShadow = true
     car.add(carLight1)
     const carLight2 = new THREE.PointLight('#ff6d35', 10, 7)
     carLight2.position.set(1.6, 0.7, 1)
+    carLight2.castShadow = true
     car.add(carLight2)
 
     // Add the pointLightHelper
@@ -193,7 +248,7 @@ const graves = new THREE.Group()
 scene.add(graves)
 
 const graveGeometry = new THREE.BoxGeometry(0.6, 0.8, 0.2)
-const graveMaterial = new THREE.MeshStandardMaterial({ map: textureLoader.load('/textures/tomb/color.png') })
+const graveMaterial = new THREE.MeshStandardMaterial({ map: textureLoader.load('/textures/tomb/color.png')})
 
 const graveColliders = [] // Array to store grave colliders
 
@@ -205,6 +260,11 @@ for (let i = 0; i < 50; i++) {
 
     // Create the mesh
     const grave = new THREE.Mesh(graveGeometry, graveMaterial)
+
+    // Enable shadows
+    grave.castShadow = true
+    grave.receiveShadow = true
+
 
     // Position
     grave.position.set(x, 0.3, z)
@@ -264,10 +324,9 @@ function addRandomGhost(){
         const action = ghost.mixer.clipAction(animation)
         action.play()
 
-        // // Add a light to the ghost
-        // const ghostLight = new THREE.PointLight('#ff00ff', 0.2, 3)
-        // ghostLight.position.set(0, 0.5, 0)
-        // ghost.add(ghostLight)
+        // Shadows
+        ghost.castShadow = true
+        ghost.receiveShadow = true
 
         ghostGrp.add(ghost)
 
@@ -292,6 +351,7 @@ const floor = new THREE.Mesh(
 )
 floor.rotation.x = - Math.PI * 0.5
 floor.position.y = 0
+floor.receiveShadow = true
 scene.add(floor)
 
 /**
@@ -314,7 +374,37 @@ scene.add(moonLight)
 // Door light
 const doorLight = new THREE.PointLight('#ff6d35', 1, 7)
 doorLight.position.set(0, 2.0, 2.5)
+doorLight.castShadow = true
 house.add(doorLight)
+
+/**
+ * Shadows
+ */
+
+// Directional light shadow
+moonLight.castShadow = true
+moonLight.shadow.mapSize.width = 256
+moonLight.shadow.mapSize.height = 256
+moonLight.shadow.camera.far = 15
+
+// Door light shadow
+doorLight.castShadow = true
+doorLight.shadow.mapSize.width = 256
+doorLight.shadow.mapSize.height = 256
+doorLight.shadow.camera.far = 7
+
+// Ghosts shadows
+ghostGrp.children.forEach(ghost => {
+    ghost.castShadow = true
+    ghost.receiveShadow = true
+    ghost.shadow.mapSize.width = 256
+    ghost.shadow.mapSize.height = 256
+    ghost.shadow.camera.far = 7
+})
+
+// Floor shadow
+floor.receiveShadow = true
+
 
 /**
  * Fog
@@ -369,6 +459,12 @@ const renderer = new THREE.WebGLRenderer({
 })
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+// Shadows
+renderer.shadowMap.enabled = true;
+
+// Shadow map type
+renderer.shadowMap.type = THREE.PCFSoftShadowMap
 
 /**
  * Animate
